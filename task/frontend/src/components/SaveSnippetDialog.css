@@ -1,0 +1,35 @@
+/* ─────────────────────────────────────────────────────────────
+   SaveSnippetDialog.css — reuses .confirm__* from ConfirmDialog
+   ───────────────────────────────────────────────────────────── */
+
+.save-snippet__label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.save-snippet__input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-5);
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+.save-snippet__input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+.save-snippet__input::placeholder {
+  color: var(--color-text-muted);
+}
+.save-snippet__input:disabled {
+  opacity: 0.7;
+}

@@ -1,0 +1,95 @@
+// ─────────────────────────────────────────────────────────────
+// schema.prisma — Postgres schema for CollabCode.
+//
+// Models:
+//   User           — synced from Clerk via webhook
+//   Room           — created when a user clicks "New Room"
+//   Snippet        — user's personal saved code snapshots
+//   SpotifyAccount — encrypted OAuth tokens per user
+// ─────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── User ────────────────────────────────────────────────────
+// Mirrors a Clerk user. Created/updated/deleted via Clerk webhook.
+// We DON'T store passwords or any sensitive auth data here —
+// Clerk owns auth entirely. We only mirror the bits we need.
+model User {
+  id          String  @id @default(uuid())
+  clerkId     String  @unique
+  email       String?
+  displayName String?
+  imageUrl    String?
+  // Personal accent colour shown on this user's cursor + avatar
+  // ring. Default = first colour in the --color-user-* palette.
+  accentColor String  @default("#F472B6")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ownedRooms      Room[]           @relation("RoomOwner")
+  snippets        Snippet[]
+  spotifyAccount  SpotifyAccount?
+
+  @@index([clerkId])
+}
+
+// ─── Room ────────────────────────────────────────────────────
+// A collaborative coding session. Live state (code buffer,
+// connected users, cursor positions) lives in Redis with TTL.
+// This table only stores durable metadata.
+model Room {
+  id           String   @id @default(uuid())
+  ownerId      String
+  owner        User     @relation("RoomOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  language     String   @default("javascript")
+  createdAt    DateTime @default(now())
+  lastActiveAt DateTime @default(now())
+
+  @@index([ownerId])
+}
+
+// ─── Snippet ─────────────────────────────────────────────────
+// User's personal saved code state. Accessible from any room.
+// Owner-scoped: server enforces userId === currentUser.id on
+// all read/write operations.
+model Snippet {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String   @default("Untitled snippet")
+  code      String   @db.Text
+  language  String   @default("javascript")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, updatedAt])
+}
+
+// ─── SpotifyAccount ──────────────────────────────────────────
+// Encrypted OAuth tokens for the Spotify Web API. accessToken
+// and refreshToken are stored as AES-256-GCM ciphertext blobs
+// (handled by backend/src/lib/spotifyCrypto.js). The encryption
+// key comes from env TOKEN_ENCRYPTION_KEY (32-byte hex).
+//
+// Why encrypt: even if the DB dump leaks, tokens are useless
+// without the encryption key (held only in app process env).
+model SpotifyAccount {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken   String   @db.Text  // ciphertext (base64)
+  refreshToken  String   @db.Text  // ciphertext (base64)
+  expiresAt     DateTime
+  scope         String   @db.Text
+  spotifyUserId String?  // cached for quick lookups
+  product       String?  // "premium" | "free" | "open"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

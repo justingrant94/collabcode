@@ -1,0 +1,27 @@
+/* ─────────────────────────────────────────────────────────────
+   AuthPage.css — shared layout for SignIn/SignUp pages.
+   Tokens only.
+   ───────────────────────────────────────────────────────────── */
+
+.auth-page {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-4);
+  min-height: calc(100dvh - var(--header-height) - var(--footer-height));
+}
+
+.auth-page__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 480px;
+}
+
+@media (max-width: 640px) {
+  .auth-page {
+    padding: var(--space-6) var(--space-3);
+  }
+}

@@ -1,0 +1,89 @@
+/* ─────────────────────────────────────────────────────────────
+   Spinner.css — "CE Lego build" animation.
+   Tokens only.
+   ───────────────────────────────────────────────────────────── */
+
+.spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--spinner-color, var(--color-accent));
+  /* No min/max — caller sizes via the SVG dimensions */
+  vertical-align: middle;
+}
+
+.spinner__svg {
+  display: block;
+  overflow: visible; /* allow tiny pop scale without clipping */
+}
+
+.spinner__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─── Each brick fades + pops in, staggered, then fades out ──
+   Total cycle ~ 1.6s. 10 delay buckets via data-i (0..9).
+   ─────────────────────────────────────────────────────────── */
+.spinner__brick {
+  transform-origin: center;
+  transform-box: fill-box;
+  opacity: 0;
+  transform: scale(0.5);
+  animation: spinnerBrick 1600ms var(--ease-snap) infinite;
+}
+
+@keyframes spinnerBrick {
+  0%   { opacity: 0;    transform: scale(0.4); }
+  20%  { opacity: 1;    transform: scale(1.08); } /* snap overshoot */
+  35%  { opacity: 1;    transform: scale(1);    } /* settle */
+  70%  { opacity: 1;    transform: scale(1);    } /* hold */
+  90%  { opacity: 0;    transform: scale(0.6);  }
+  100% { opacity: 0;    transform: scale(0.4);  }
+}
+
+/* Stagger: every brick starts 60ms after the previous one. The
+   data-i value ranges 0..9 (mod 10), giving a satisfying
+   "building up" sequence then a unified fade-out. */
+.spinner__brick[data-i='0'] { animation-delay: 0ms; }
+.spinner__brick[data-i='1'] { animation-delay: 60ms; }
+.spinner__brick[data-i='2'] { animation-delay: 120ms; }
+.spinner__brick[data-i='3'] { animation-delay: 180ms; }
+.spinner__brick[data-i='4'] { animation-delay: 240ms; }
+.spinner__brick[data-i='5'] { animation-delay: 300ms; }
+.spinner__brick[data-i='6'] { animation-delay: 360ms; }
+.spinner__brick[data-i='7'] { animation-delay: 420ms; }
+.spinner__brick[data-i='8'] { animation-delay: 480ms; }
+.spinner__brick[data-i='9'] { animation-delay: 540ms; }
+
+/* ─── Small variant: cluster spins gently ──────────────────── */
+.spinner--sm .spinner__svg {
+  animation: spinnerSpin 1200ms linear infinite;
+}
+@keyframes spinnerSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Reduced motion: static CE mark with gentle pulse ─────── */
+@media (prefers-reduced-motion: reduce) {
+  .spinner__brick {
+    animation: spinnerPulse 1200ms ease-in-out infinite;
+    animation-delay: 0ms !important;
+    opacity: 1;
+    transform: scale(1);
+  }
+  .spinner--sm .spinner__svg {
+    animation: spinnerPulse 1200ms ease-in-out infinite;
+  }
+  @keyframes spinnerPulse {
+    0%, 100% { opacity: 0.45; }
+    50%      { opacity: 1; }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "collab-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CollabCode backend — Express + Socket.io + Redis + Postgres + Docker exec.",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon --watch src --watch prisma src/index.js",
+    "start": "node src/index.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@clerk/clerk-sdk-node": "^5.0.50",
+    "@prisma/client": "^5.18.0",
+    "cors": "^2.8.5",
+    "dockerode": "^4.0.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "ioredis": "^5.4.1",
+    "pino": "^9.3.2",
+    "socket.io": "^4.7.5",
+    "svix": "^1.29.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "pino-pretty": "^11.2.2",
+    "prisma": "^5.18.0"
+  }
+}

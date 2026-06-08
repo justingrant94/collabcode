@@ -1,0 +1,49 @@
+/* ─────────────────────────────────────────────────────────────
+   Toolbar.css
+   ───────────────────────────────────────────────────────────── */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.toolbar__left,
+.toolbar__right {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Sibling of the Run button — used to dismiss the current Output
+   result or error. Subtle by default; disabled while there is
+   nothing to clear so it doesn't compete with Run. */
+.toolbar__clear {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.toolbar__clear:hover:not(:disabled) {
+  background: var(--color-surface-hover, var(--color-bg));
+  color: var(--color-text-primary);
+  border-color: var(--color-text-muted);
+}
+.toolbar__clear:focus-visible {
+  outline: 2px solid var(--color-accent, var(--color-text-primary));
+  outline-offset: 2px;
+}
+.toolbar__clear:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

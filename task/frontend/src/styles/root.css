@@ -1,0 +1,239 @@
+/* ═════════════════════════════════════════════════════════════
+   root.css — SINGLE SOURCE OF TRUTH for design tokens
+   ─────────────────────────────────────────────────────────────
+   Every colour, font, spacing, radius, shadow, transition and
+   breakpoint in the app lives here as a CSS custom property.
+   Nothing else in the codebase should contain a hard-coded hex,
+   font name, or pixel value for these concerns.
+
+   To rebrand the app:
+     1. Edit the values in this file.
+     2. Done. Every component re-tints automatically.
+
+   Themes:
+     :root                       → dark theme (default)
+     :root[data-theme="light"]   → light theme overrides
+
+   Sections (search by name):
+     · Colour — surfaces
+     · Colour — text
+     · Colour — accent
+     · Colour — semantic
+     · Colour — user cursor palette
+     · Colour — brand exceptions (Spotify)
+     · Typography
+     · Spacing scale
+     · Radii
+     · Shadows
+     · Transitions / easing
+     · Breakpoints
+     · Z-index scale
+     · Cursor assets
+     · Light theme overrides
+   ═════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─── Colour — surfaces ─────────────────────────────────── */
+  --color-bg:               #0A0A0B;
+  --color-surface:          #111114;
+  --color-surface-raised:   #17171B;
+  --color-surface-hover:    #1E1E24;
+  --color-border:           #26262C;
+  --color-border-strong:    #36363E;
+
+  /* ─── Colour — text ─────────────────────────────────────── */
+  --color-text-primary:     #F4F4F5;
+  --color-text-secondary:   #A1A1AA;
+  --color-text-muted:       #71717A;
+  --color-text-inverse:     #0A0A0B;
+
+  /* ─── Colour — accent (brand) ───────────────────────────── */
+  --color-accent:           #7C5CFC;
+  --color-accent-hover:     #8E72FD;
+  --color-accent-muted:     rgba(124, 92, 252, 0.16);
+  --color-accent-contrast:  #FFFFFF;
+
+  /* ─── Colour — semantic ─────────────────────────────────── */
+  --color-success:          #22C55E;
+  --color-success-bg:       rgba(34, 197, 94, 0.12);
+  --color-warning:          #F59E0B;
+  --color-warning-bg:       rgba(245, 158, 11, 0.12);
+  --color-danger:           #EF4444;
+  --color-danger-bg:        rgba(239, 68, 68, 0.12);
+  --color-info:             #3B82F6;
+  --color-info-bg:          rgba(59, 130, 246, 0.12);
+
+  /* ─── Colour — user cursor palette ──────────────────────── */
+  /* Server assigns one of these to each user on join. Chosen
+     for max distinguishability on the dark bg. */
+  --color-user-1: #F472B6;  /* pink   */
+  --color-user-2: #60A5FA;  /* blue   */
+  --color-user-3: #34D399;  /* emerald*/
+  --color-user-4: #FBBF24;  /* amber  */
+  --color-user-5: #A78BFA;  /* violet */
+  --color-user-6: #F87171;  /* rose   */
+  --color-user-7: #2DD4BF;  /* teal   */
+  --color-user-8: #FB923C;  /* orange */
+
+  /* ─── Colour — brand exceptions (Spotify) ───────────────── */
+  /* These are the ONLY hard-coded brand colours allowed because
+     Spotify's brand guidelines require their exact green. */
+  --color-spotify-green:        #1DB954;
+  --color-spotify-green-hover:  #1ED760;
+  --color-spotify-black:        #191414;
+  --color-spotify-white:        #FFFFFF;
+
+  /* ─── Colour — brand exceptions (third-party) ───────────── */
+  /* Same rationale as Spotify above: third-party trademark
+     colours must match the brand owner's spec exactly. Used
+     only as hover accents on icon links to those services. */
+  --color-brand-linkedin: #0A66C2;
+
+  /* ─── Typography ────────────────────────────────────────── */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system,
+               'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular,
+               Menlo, Monaco, Consolas, monospace;
+
+  /* Body text scale */
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg:   1.125rem;  /* 18px */
+  --text-xl:   1.25rem;   /* 20px */
+
+  /* Heading scale (distinct from body to enforce hierarchy) */
+  --heading-sm: 1.25rem;  /* 20px — h4/h5 */
+  --heading-md: 1.5rem;   /* 24px — h3   */
+  --heading-lg: 2rem;     /* 32px — h2   */
+  --heading-xl: 2.5rem;   /* 40px — h1   */
+
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  --leading-tight:   1.2;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.7;
+
+  --tracking-tight:  -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.02em;
+
+  /* ─── Spacing scale ─────────────────────────────────────── */
+  /* Use ONLY these for any margin/padding/gap in the app.
+     Component CSS must never use raw px/rem for spacing. */
+  --space-0:  0;
+  --space-1:  0.25rem;  /*  4px */
+  --space-2:  0.5rem;   /*  8px */
+  --space-3:  0.75rem;  /* 12px */
+  --space-4:  1rem;     /* 16px */
+  --space-5:  1.25rem;  /* 20px */
+  --space-6:  1.5rem;   /* 24px */
+  --space-8:  2rem;     /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+
+  /* ─── Radii ─────────────────────────────────────────────── */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* ─── Shadows ───────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.45),
+               0 2px 4px -2px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 32px -8px rgba(0, 0, 0, 0.55),
+               0 4px 8px -4px rgba(0, 0, 0, 0.4);
+
+  /* Inner glow used on focused inputs / DJ-active states. */
+  --shadow-focus: 0 0 0 3px var(--color-accent-muted);
+
+  /* ─── Transitions / easing ──────────────────────────────── */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-snap:   cubic-bezier(0.34, 1.56, 0.64, 1);  /* lego-snap */
+
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+
+  /* ─── Breakpoints (informational — used in media queries) ─ */
+  /* CSS custom properties can't be used directly in media query
+     conditions, but we keep them here as the single source. Any
+     media query must use these exact pixel values. */
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+
+  /* ─── Z-index scale ─────────────────────────────────────── */
+  --z-base:     1;
+  --z-sticky:   100;
+  --z-dropdown: 200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+  --z-tooltip:  600;
+
+  /* ─── Cursor assets (theme-aware) ───────────────────────── */
+  /* Browsers can't theme-switch cursor: url() reactively, so we
+     swap the URL itself per theme. Components only reference
+     these variables, never the raw paths.
+     Assets served from frontend/static/icons/. */
+  --cursor-default: url('/icons/cursor.svg') 4 4, default;
+  --cursor-pointer: url('/icons/cursor-pointer.svg') 6 4, pointer;
+
+  /* ─── Layout primitives ─────────────────────────────────── */
+  --header-height: 56px;
+  --footer-height: 56px;
+  --container-max: 1280px;
+}
+
+/* ═════════════════════════════════════════════════════════════
+   Light theme — applied via <html data-theme="light">
+   Only overrides colour tokens; sizes/spaces/etc stay shared.
+   ═════════════════════════════════════════════════════════════ */
+:root[data-theme='light'] {
+  /* Surfaces */
+  --color-bg:             #FAFAFA;
+  --color-surface:        #FFFFFF;
+  --color-surface-raised: #FFFFFF;
+  --color-surface-hover:  #F4F4F5;
+  --color-border:         #E4E4E7;
+  --color-border-strong:  #D4D4D8;
+
+  /* Text */
+  --color-text-primary:   #18181B;
+  --color-text-secondary: #52525B;
+  --color-text-muted:     #71717A;
+  --color-text-inverse:   #FAFAFA;
+
+  /* Accent (slightly darker for contrast on light) */
+  --color-accent:          #6D4DF7;
+  --color-accent-hover:    #5B3CE8;
+  --color-accent-muted:    rgba(109, 77, 247, 0.12);
+  --color-accent-contrast: #FFFFFF;
+
+  /* Semantic — same hues, lighter muted bgs */
+  --color-success-bg: rgba(34, 197, 94, 0.10);
+  --color-warning-bg: rgba(245, 158, 11, 0.10);
+  --color-danger-bg:  rgba(239, 68, 68, 0.10);
+  --color-info-bg:    rgba(59, 130, 246, 0.10);
+
+  /* Shadows — softer on light backgrounds */
+  --shadow-sm: 0 1px 2px 0 rgba(24, 24, 27, 0.06);
+  --shadow-md: 0 4px 12px -2px rgba(24, 24, 27, 0.10),
+               0 2px 4px -2px rgba(24, 24, 27, 0.06);
+  --shadow-lg: 0 16px 32px -8px rgba(24, 24, 27, 0.14),
+               0 4px 8px -4px rgba(24, 24, 27, 0.08);
+
+  /* Light cursors (dark badge on light page) */
+  --cursor-default: url('/icons/cursor-light.svg') 4 4, default;
+  --cursor-pointer: url('/icons/cursor-pointer-light.svg') 6 4, pointer;
+}

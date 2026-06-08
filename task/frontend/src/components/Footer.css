@@ -1,0 +1,80 @@
+/* ─────────────────────────────────────────────────────────────
+   Footer.css — global footer.
+   Tokens only.
+   ───────────────────────────────────────────────────────────── */
+
+.footer {
+  width: 100%;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-5) 0;
+  margin-top: auto; /* push to bottom of viewport on short pages */
+}
+
+.footer__inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.footer__credit {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+}
+
+.footer__links {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.footer__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-10);
+  height: var(--space-10);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  background: transparent;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.footer__link:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+.footer__link:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.footer__link:active {
+  transform: scale(0.94);
+}
+
+/* Brand-coloured hover for LinkedIn — uses the dedicated brand
+   token defined in root.css; never hard-coded here. */
+.footer__link--linkedin:hover {
+  color: var(--color-brand-linkedin);
+}
+
+/* Responsive: stack on very narrow viewports */
+@media (max-width: 480px) {
+  .footer__inner {
+    flex-direction: column;
+    gap: var(--space-3);
+    text-align: center;
+    padding: 0 var(--space-4);
+  }
+}

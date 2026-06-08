@@ -1,0 +1,53 @@
+# ─────────────────────────────────────────────────────────────
+# docker-compose.yml — local development infrastructure
+#
+# Spins up:
+#   - redis       : ephemeral room state (24h TTL via app code)
+#   - postgres    : durable storage for users, rooms, snippets,
+#                   Spotify tokens (encrypted at rest)
+#
+# Usage:
+#   docker compose up -d            # start Redis + Postgres
+#   docker compose down             # stop
+#
+# The Node server and Vite client are intentionally NOT
+# containerised in dev — running them on the host gives faster
+# HMR and easier debugging. Containers are only used to host
+# Redis + Postgres locally.
+#
+# Production server lives on Fly.io (own Dockerfile in /server).
+# Production Redis: Upstash. Production Postgres: Neon.
+# ─────────────────────────────────────────────────────────────
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: collab_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: collab_postgres
+    environment:
+      POSTGRES_USER: collab
+      POSTGRES_PASSWORD: collab_dev_password
+      POSTGRES_DB: collab
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U collab -d collab"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  redis_data:
+  postgres_data:

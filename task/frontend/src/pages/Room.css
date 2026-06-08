@@ -1,0 +1,107 @@
+/* ─────────────────────────────────────────────────────────────
+   Room.css
+   ───────────────────────────────────────────────────────────── */
+
+.room {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-6);
+  gap: var(--space-4);
+  min-height: calc(100dvh - var(--header-height) - var(--footer-height));
+}
+
+.room__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* ─── Two-column layout: editor + snippets ─────────────── */
+.room__work {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: var(--space-4);
+  flex: 1 1 auto;
+  /* Critical: lets the grid track shrink so children with
+     `height: 100%` measure against the grid row height instead
+     of growing with their own content (Monaco was ballooning). */
+  min-height: 0;
+  height: 100%;
+}
+
+.room__editor-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  /* Same reason: without min-height:0 a flex/grid child grows
+     to fit its content, which makes Monaco enlarge forever. */
+  min-height: 0;
+  height: 100%;
+}
+
+.room__side-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+  .room__work {
+    grid-template-columns: 1fr;
+  }
+  .room__side-col {
+    order: -1; /* surface snippets above editor on narrow screens */
+  }
+}
+
+.room--centered {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 50vh;
+  gap: var(--space-3);
+}
+
+.room__editor-placeholder {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 320px;
+  padding: var(--space-12);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+}
+
+.room__hint {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.room__hint code {
+  padding: var(--space-0) var(--space-2);
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 640px) {
+  .room {
+    padding: var(--space-4);
+  }
+}

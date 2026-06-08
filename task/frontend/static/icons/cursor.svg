@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  cursor.svg — default cursor for dark theme.
+  Composition: small filled "CE" badge tile (top-left) + a thin
+  vertical caret line dropping down from the badge.
+  Hotspot is at the bottom-tip of the caret line (set in CSS:
+  url(...) 4 4).
+  Size: 28x28 SVG, browser scales to actual cursor size.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+  <!-- Soft drop shadow for the badge (premium feel) -->
+  <defs>
+    <filter id="badgeShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="1" stdDeviation="0.8" flood-color="#000" flood-opacity="0.45" />
+    </filter>
+  </defs>
+
+  <!-- Badge tile (accent purple, rounded) -->
+  <rect x="1" y="1" width="14" height="14" rx="3.5" fill="#7C5CFC" filter="url(#badgeShadow)" />
+
+  <!-- Tiny "C" + "E" inside the badge -->
+  <g fill="#FFFFFF">
+    <!-- C -->
+    <path d="M7 5.5
+             A2.6 2.6 0 1 0 7 10.5
+             L7 9.2
+             A1.4 1.4 0 1 1 7 6.8
+             Z" />
+    <!-- E (three bars) -->
+    <rect x="8.2" y="5.4" width="0.9" height="5.2" rx="0.3" />
+    <rect x="8.2" y="5.4" width="3.0" height="0.9" rx="0.3" />
+    <rect x="8.2" y="7.6" width="2.3" height="0.9" rx="0.3" />
+    <rect x="8.2" y="9.7" width="3.0" height="0.9" rx="0.3" />
+  </g>
+
+  <!-- Caret line — thin vertical I-beam dropping from badge.
+       Bottom tip sits near (4, 27) which combined with the
+       hotspot offset (4, 4) lands the active point at the line's
+       bottom edge for natural pointing feel. -->
+  <line x1="4" y1="15.5" x2="4" y2="26" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" />
+  <!-- Tiny serif caps on the caret (subtle, very tasteful) -->
+  <line x1="2.5" y1="26" x2="5.5" y2="26" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round" />
+</svg>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  cursor-pointer.svg — hover/pointer variant for dark theme.
+  Just the "CE" badge (slightly larger, no caret) so it reads as
+  "interactive element" rather than "text".
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+  <defs>
+    <filter id="ptrShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="1.2" flood-color="#000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <rect x="1" y="1" width="18" height="18" rx="4.5" fill="#7C5CFC" filter="url(#ptrShadow)" />
+
+  <g fill="#FFFFFF" transform="translate(2.4, 2.4) scale(1.28)">
+    <path d="M7 5.5
+             A2.6 2.6 0 1 0 7 10.5
+             L7 9.2
+             A1.4 1.4 0 1 1 7 6.8
+             Z" />
+    <rect x="8.2" y="5.4" width="0.9" height="5.2" rx="0.3" />
+    <rect x="8.2" y="5.4" width="3.0" height="0.9" rx="0.3" />
+    <rect x="8.2" y="7.6" width="2.3" height="0.9" rx="0.3" />
+    <rect x="8.2" y="9.7" width="3.0" height="0.9" rx="0.3" />
+  </g>
+</svg>

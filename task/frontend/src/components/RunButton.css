@@ -1,0 +1,39 @@
+/* ─────────────────────────────────────────────────────────────
+   RunButton.css
+   ───────────────────────────────────────────────────────────── */
+
+.run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: var(--cursor-pointer);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.run-btn:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+.run-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.run-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.run-btn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}

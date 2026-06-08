@@ -1,0 +1,95 @@
+/* ─────────────────────────────────────────────────────────────
+   AccentColorPicker.css
+   ───────────────────────────────────────────────────────────── */
+
+.accent-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-10);
+  height: var(--space-10);
+  padding: var(--space-2);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: var(--cursor-pointer);
+  transition: background var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+
+.accent-trigger:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+.accent-trigger:focus-visible,
+.accent-trigger[data-state='open'] {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+.accent-trigger__swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ─── Popover ─────────────────────────────────────────────── */
+.accent-popover {
+  z-index: var(--z-dropdown);
+  padding: var(--space-4);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  width: 220px;
+  animation: dropdownIn var(--duration-fast) var(--ease-out);
+}
+
+.accent-popover__title {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.accent-popover__hint {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.accent-popover__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.accent-popover__swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  box-shadow: var(--shadow-sm);
+  cursor: var(--cursor-pointer);
+  transition: transform var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-out);
+}
+
+.accent-popover__swatch:hover {
+  transform: scale(1.1);
+}
+
+.accent-popover__swatch:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.accent-popover__swatch[data-active='true'] {
+  border-color: var(--color-text-primary);
+  transform: scale(1.08);
+}

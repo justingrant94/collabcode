@@ -1,0 +1,46 @@
+/* ─────────────────────────────────────────────────────────────
+   Editor.css — Monaco wrapper.
+   The internal Monaco theme is built from CSS tokens via
+   lib/monacoTheme.js. This file only handles the outer frame.
+   ───────────────────────────────────────────────────────────── */
+
+.editor {
+  /* flex: 1 1 0 (not auto) so the editor's *initial* basis is 0
+     and it grows to fill the column rather than expanding to
+     fit Monaco's content height. */
+  flex: 1 1 0;
+  min-height: 280px;
+  /* Hard cap relative to viewport so the editor can never push
+     the output panel off-screen, even on tiny windows. */
+  max-height: calc(100dvh - 280px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+/* Remote-cursor decoration styling — Editor calls deltaDecorations
+   with className: "remote-cursor" and lineDecorations colour-bound
+   via inline style. The "::before" creates the caret line itself. */
+.remote-cursor {
+  position: relative;
+  border-left: 2px solid var(--remote-cursor-color, var(--color-accent));
+  margin-left: -1px;
+}
+
+.remote-cursor-name {
+  position: absolute;
+  top: -1.4em;
+  left: -2px;
+  padding: 2px 6px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  color: var(--color-accent-contrast);
+  background: var(--remote-cursor-color, var(--color-accent));
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: var(--z-base);
+  box-shadow: var(--shadow-sm);
+}

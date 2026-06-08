@@ -1,0 +1,57 @@
+# ─── Node / package managers ───────────────────────
+node_modules/
+.npm/
+.pnp.*
+.yarn/
+.yarn-integrity
+package-lock.json.bak
+
+# ─── Build output ──────────────────────────────────
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# ─── Environment files (NEVER commit) ──────────────
+# Real secrets live in .env files; they are gitignored
+# so they cannot be pushed accidentally. Use the
+# placeholders inside them as documentation.
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+**/.env.*.local
+
+# ─── Logs ──────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── Editor / OS noise ─────────────────────────────
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+Thumbs.db
+
+# ─── Prisma generated client ───────────────────────
+backend/node_modules/.prisma/
+backend/prisma/migrations/dev.db*
+
+# ─── Docker / runtime ──────────────────────────────
+.docker/
+*.pid
+
+# ─── Test / coverage ───────────────────────────────
+coverage/
+.nyc_output/
