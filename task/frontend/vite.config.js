@@ -18,9 +18,8 @@ export default defineConfig({
   // Example: static/icons/favicon.svg -> requested at /icons/favicon.svg
   publicDir: 'static',
   server: {
-    // Bind to the loopback IP literal (not 'localhost') so the
-    // origin the browser sees matches the Spotify redirect URI
-    // we register (Spotify rejects 'localhost' as of April 2025).
+    // Bind to the loopback IP literal so local frontend and backend
+    // use one consistent origin pair during development.
     host: '127.0.0.1',
     port: 5173,
     strictPort: true,

@@ -19,7 +19,6 @@ import { Server as IOServer } from 'socket.io';
 import { verifyToken } from '@clerk/clerk-sdk-node';
 import { logger } from '../lib/logger.js';
 import { registerRoomHandlers } from './handlers/room.js';
-import { registerDjHandlers } from './handlers/dj.js';
 
 export function createSocketServer(httpServer) {
   const io = new IOServer(httpServer, {
@@ -69,7 +68,6 @@ export function createSocketServer(httpServer) {
   io.on('connection', (socket) => {
     logger.debug({ id: socket.id, userId: socket.data.userId }, 'socket connected');
     registerRoomHandlers(io, socket);
-    registerDjHandlers(io, socket);
     socket.on('disconnect', (reason) => {
       logger.debug({ id: socket.id, reason }, 'socket disconnected');
     });

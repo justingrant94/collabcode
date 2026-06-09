@@ -113,24 +113,7 @@ box as you verify it locally.
 | 7.4 | Cursor colour in collab follows accent | ⬜ | |
 | 7.5 | Only palette-approved colours accepted by `/api/me/accent` | ✅ | `#000000` → 400 with allowed list |
 
-## 8. Spotify (DJ mode)
-
-| # | Check | Status | Notes |
-|---|---|---|---|
-| 8.1 | "Connect with Spotify" button visible to signed-in users in Room sidebar | ⬜ | |
-| 8.2 | Clicking it redirects to `accounts.spotify.com/authorize?...` | ⬜ | PKCE flow |
-| 8.3 | Spotify callback hits `/spotify/callback`, toast says "connected" | ⬜ | |
-| 8.4 | Tokens stored encrypted in `SpotifyAccount` table | ⬜ | Check DB; ciphertext should NOT be base64 of plaintext |
-| 8.5 | TierNotice shown for non-Premium accounts | ⬜ | `product !== 'premium'` |
-| 8.6 | Premium: Web Playback SDK loads and player surfaces | ⬜ | |
-| 8.7 | Premium: "Become DJ" claims the role in Redis | ⬜ | |
-| 8.8 | Second user joins → sees the DJ's track in their player | ⬜ | dj-state event |
-| 8.9 | DJ pausing → followers pause within ~1.5s | ⬜ | sync tolerance |
-| 8.10 | "Step down" releases DJ role | ⬜ | |
-| 8.11 | Disconnect Spotify removes the row | ⬜ | |
-| 8.12 | OAuth redirect URI is `http://127.0.0.1:5173/spotify/callback` | ⬜ | Spotify rejects `localhost` since Apr 2025 |
-
-## 9. UI audit — light + dark mode
+## 8. UI audit — light + dark mode
 
 For each page/component, verify in BOTH modes:
 - Text contrast passes WCAG AA (≥ 4.5:1 for body, ≥ 3:1 for large)
@@ -140,26 +123,23 @@ For each page/component, verify in BOTH modes:
 
 | # | Surface | Light | Dark | Notes |
 |---|---|---|---|---|
-| 9.1 | Landing page hero | ✅ | ✅ | Both modes screenshotted, accent purple, text contrast good |
-| 9.2 | Header (logo, sign-in link, theme toggle) | ✅ | ✅ | Toggle icon swaps sun ↔ moon |
-| 9.3 | Footer (LinkedIn + email icons) | ✅ | ✅ | Icons readable in both |
-| 9.4 | Sign-in / Sign-up page | ⬜ | ⬜ | Clerk-rendered — needs separate audit |
-| 9.5 | Room editor (Monaco background + gutter) | ⬜ | ⬜ | Needs auth |
-| 9.6 | Output panel (success + error states) | ⬜ | ⬜ | |
-| 9.7 | Toolbar + Run button + LanguageDropdown | ⬜ | ⬜ | |
-| 9.8 | SnippetsSidebar + SnippetItem (hover state) | ⬜ | ⬜ | |
-| 9.9 | SaveSnippetDialog + ConfirmDialog (modal overlay) | ⬜ | ⬜ | |
-| 9.10 | Toasts (success / error variants) | ⬜ | ⬜ | |
-| 9.11 | ProfileButton dropdown + AccentColorPicker swatches | ⬜ | ⬜ | |
-| 9.12 | MusicPanel (collapsed + expanded) | ⬜ | ⬜ | |
-| 9.13 | MusicPlayer controls (Spotify green stays green in both) | ⬜ | ⬜ | Brand exception |
-| 9.14 | TierNotice (warning colour scheme) | ⬜ | ⬜ | |
-| 9.15 | UserAvatars (initials + accent ring) | ⬜ | ⬜ | |
-| 9.16 | UserCursors (remote caret colour) | ⬜ | ⬜ | |
-| 9.17 | NotFound page | ⬜ | ⬜ | |
-| 9.18 | "Missing Clerk key" warning page | ⬜ | ⬜ | |
-| 9.19 | Spinner (Lego bricks) in both modes | ⬜ | ⬜ | |
-| 9.20 | Focus rings visible on all interactive elements | ⬜ | ⬜ | |
+| 8.1 | Landing page hero | ✅ | ✅ | Both modes screenshotted, accent purple, text contrast good |
+| 8.2 | Header (logo, sign-in link, theme toggle) | ✅ | ✅ | Toggle icon swaps sun ↔ moon |
+| 8.3 | Footer (LinkedIn + email icons) | ✅ | ✅ | Icons readable in both |
+| 8.4 | Sign-in / Sign-up page | ⬜ | ⬜ | Clerk-rendered — needs separate audit |
+| 8.5 | Room editor (Monaco background + gutter) | ⬜ | ⬜ | Needs auth |
+| 8.6 | Output panel (success + error states) | ⬜ | ⬜ | |
+| 8.7 | Toolbar + Run button + LanguageDropdown | ⬜ | ⬜ | |
+| 8.8 | SnippetsSidebar + SnippetItem (hover state) | ⬜ | ⬜ | |
+| 8.9 | SaveSnippetDialog + ConfirmDialog (modal overlay) | ⬜ | ⬜ | |
+| 8.10 | Toasts (success / error variants) | ⬜ | ⬜ | |
+| 8.11 | ProfileButton dropdown + AccentColorPicker swatches | ⬜ | ⬜ | |
+| 8.12 | UserAvatars (initials + accent ring) | ⬜ | ⬜ | |
+| 8.13 | UserCursors (remote caret colour) | ⬜ | ⬜ | |
+| 8.14 | NotFound page | ⬜ | ⬜ | |
+| 8.15 | "Missing Clerk key" warning page | ⬜ | ⬜ | |
+| 8.16 | Spinner (Lego bricks) in both modes | ⬜ | ⬜ | |
+| 8.17 | Focus rings visible on all interactive elements | ⬜ | ⬜ | |
 
 > ✅ **CSS architecture audit:** `grep` confirms **every hex colour in
 > the entire frontend lives in `frontend/src/styles/root.css`**. No
@@ -235,6 +215,5 @@ curl -X POST http://127.0.0.1:4000/api/execute \
 - ❌ Phase 5 deploy config (Fly.io fly.toml, Dockerfile verified, README)
 - ❌ TypeScript sandbox image (currently fakes TS as JS)
 - ❌ Clerk webhook signing for production user-sync
-- ❌ Spotify production redirect URI registration
 - ❌ Automated UI snapshot tests (Playwright)
 - ❌ Bundle-size budget enforcement in CI

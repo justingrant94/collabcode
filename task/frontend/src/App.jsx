@@ -29,7 +29,6 @@ import { NotFound } from './pages/NotFound.jsx';
 import { SignIn } from './pages/SignIn.jsx';
 import { SignUp } from './pages/SignUp.jsx';
 import { Room } from './pages/Room.jsx';
-import { SpotifyCallback } from './pages/SpotifyCallback.jsx';
 import {
   CLERK_PUBLISHABLE_KEY,
   buildClerkAppearance,
@@ -81,14 +80,6 @@ function AppShell() {
               element={
                 <RequireAuth>
                   <Room />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/spotify/callback"
-              element={
-                <RequireAuth>
-                  <SpotifyCallback />
                 </RequireAuth>
               }
             />

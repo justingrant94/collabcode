@@ -12,7 +12,6 @@
  *
  * Future phases mount more here:
  *   Phase 7 → AccentColorPicker (in UserButton dropdown)
- *   Phase 8 → SpotifyConnect / MusicPlayer mini display
  */
 
 import { Link, useLocation } from 'react-router-dom';

@@ -15,7 +15,6 @@ import { clerkWebhookRouter } from './routes/webhooks.js';
 import { roomsRouter } from './routes/rooms.js';
 import { executeRouter } from './routes/execute.js';
 import { snippetsRouter } from './routes/snippets.js';
-import { spotifyRouter } from './routes/spotify.js';
 import { userRouter } from './routes/user.js';
 
 export function createApp() {
@@ -77,7 +76,6 @@ export function createApp() {
   app.use('/api/rooms', roomsRouter);
   app.use('/api/execute', executeRouter);
   app.use('/api/snippets', snippetsRouter);
-  app.use('/api/spotify', spotifyRouter);
   app.use('/api/me', userRouter);
 
   // ─── 404 ───────────────────────────────────────────────

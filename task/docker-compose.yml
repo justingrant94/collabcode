@@ -3,8 +3,7 @@
 #
 # Spins up:
 #   - redis       : ephemeral room state (24h TTL via app code)
-#   - postgres    : durable storage for users, rooms, snippets,
-#                   Spotify tokens (encrypted at rest)
+#   - postgres    : durable storage for users, rooms, and snippets
 #
 # Usage:
 #   docker compose up -d            # start Redis + Postgres

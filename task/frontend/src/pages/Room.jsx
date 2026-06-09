@@ -19,7 +19,6 @@ import { UserCursors } from '../components/UserCursors.jsx';
 import { Toolbar } from '../components/Toolbar.jsx';
 import { Output } from '../components/Output.jsx';
 import { SnippetsSidebar } from '../components/SnippetsSidebar.jsx';
-import { MusicPanel } from '../components/MusicPanel.jsx';
 import { useRoomSocket } from '../hooks/useRoomSocket.js';
 import { useApi } from '../hooks/useApi.js';
 import { useToast } from '../components/ToastProvider.jsx';
@@ -52,7 +51,7 @@ export function Room() {
 
   const {
     status, error, code, language, users,
-    sendCode, sendCursor, sendLanguage, applyCode, remoteEvents, socket,
+    sendCode, sendCursor, sendLanguage, applyCode, remoteEvents,
   } = useRoomSocket(metaState.status === 'ok' ? roomId : null);
 
   const [editor, setEditor] = useState(null);
@@ -266,11 +265,6 @@ export function Room() {
         </div>
 
         <div className="room__side-col">
-          <MusicPanel
-            socket={socket}
-            roomId={roomId}
-            mySocketId={socket?.id}
-          />
           <SnippetsSidebar
             currentCode={code}
             currentLanguage={language}

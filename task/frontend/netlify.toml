@@ -8,11 +8,9 @@
 #   4. Add env vars in the Netlify UI:
 #        VITE_API_URL                  → https://your-backend.fly.dev
 #        VITE_CLERK_PUBLISHABLE_KEY    → pk_live_...
-#        VITE_SPOTIFY_CLIENT_ID        → your Spotify client id
-#        VITE_SPOTIFY_REDIRECT_URI     → https://yoursite.netlify.app/spotify/callback
 #
 # The SPA redirect below ensures client-side React Router routes
-# (e.g. /r/<roomId>, /spotify/callback) all resolve to index.html.
+# (e.g. /r/<roomId>) all resolve to index.html.
 # ─────────────────────────────────────────────────────────────
 
 [build]

@@ -20,7 +20,7 @@
      · Colour — accent
      · Colour — semantic
      · Colour — user cursor palette
-     · Colour — brand exceptions (Spotify)
+       · Colour — brand exceptions (third-party)
      · Typography
      · Spacing scale
      · Radii
@@ -75,18 +75,9 @@
   --color-user-7: #2DD4BF;  /* teal   */
   --color-user-8: #FB923C;  /* orange */
 
-  /* ─── Colour — brand exceptions (Spotify) ───────────────── */
-  /* These are the ONLY hard-coded brand colours allowed because
-     Spotify's brand guidelines require their exact green. */
-  --color-spotify-green:        #1DB954;
-  --color-spotify-green-hover:  #1ED760;
-  --color-spotify-black:        #191414;
-  --color-spotify-white:        #FFFFFF;
-
   /* ─── Colour — brand exceptions (third-party) ───────────── */
-  /* Same rationale as Spotify above: third-party trademark
-     colours must match the brand owner's spec exactly. Used
-     only as hover accents on icon links to those services. */
+  /* Third-party trademark colours must match the brand owner's
+     spec exactly. Used only as hover accents on icon links. */
   --color-brand-linkedin: #0A66C2;
 
   /* ─── Typography ────────────────────────────────────────── */
@@ -151,7 +142,7 @@
   --shadow-lg: 0 16px 32px -8px rgba(0, 0, 0, 0.55),
                0 4px 8px -4px rgba(0, 0, 0, 0.4);
 
-  /* Inner glow used on focused inputs / DJ-active states. */
+   /* Inner glow used on focused inputs and active UI states. */
   --shadow-focus: 0 0 0 3px var(--color-accent-muted);
 
   /* ─── Transitions / easing ──────────────────────────────── */

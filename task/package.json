@@ -2,7 +2,7 @@
   "name": "collab-code-editor",
   "version": "0.1.0",
   "private": true,
-  "description": "Real-time collaborative code editor with sandboxed execution, Spotify DJ mode, and snippet library.",
+  "description": "Real-time collaborative code editor with sandboxed execution and snippet library.",
   "scripts": {
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:backend": "npm --prefix backend run dev",

@@ -17,9 +17,8 @@
  *   role="status" + aria-label so screen readers announce loading.
  *   Honours prefers-reduced-motion via CSS fallback.
  *
- * Used by: Run button, snippet save/delete, SpotifyConnect,
- *          ConfirmDialog confirm, initial app load, route
- *          transitions, MusicPlayer loading states, useSnippets
+ * Used by: Run button, snippet save/delete, confirm dialogs,
+ *          initial app load, route transitions, and snippet
  *          fetch states.
  */
 
@@ -31,7 +30,7 @@ const SIZE_MAP = { sm: 16, md: 32, lg: 64 };
  * @param {object}  props
  * @param {'sm'|'md'|'lg'|number} [props.size='md']
  * @param {string}  [props.ariaLabel='Loading']
- * @param {string}  [props.color]        - Override --color-accent (e.g. white on Spotify-green button)
+ * @param {string}  [props.color]        - Override --color-accent for local context
  * @param {string}  [props.className]    - Layout class for parent positioning
  * @returns {JSX.Element}
  */
@@ -39,9 +38,8 @@ export function Spinner({ size = 'md', ariaLabel = 'Loading', color, className =
   const px = typeof size === 'number' ? size : SIZE_MAP[size] ?? SIZE_MAP.md;
   const variant = typeof size === 'string' ? size : px <= 20 ? 'sm' : px >= 56 ? 'lg' : 'md';
 
-  // Inline style only used to override the accent colour for
-  // special placements (Spinner on the Spotify-green button needs
-  // white bricks). Otherwise components inherit --color-accent.
+  // Inline style only used when a local context needs a specific
+  // spinner colour. Otherwise components inherit --color-accent.
   const style = color ? { '--spinner-color': color } : undefined;
 
   return (

@@ -5,7 +5,6 @@
 //   User           — synced from Clerk via webhook
 //   Room           — created when a user clicks "New Room"
 //   Snippet        — user's personal saved code snapshots
-//   SpotifyAccount — encrypted OAuth tokens per user
 // ─────────────────────────────────────────────────────────────
 
 generator client {
@@ -35,7 +34,6 @@ model User {
 
   ownedRooms      Room[]           @relation("RoomOwner")
   snippets        Snippet[]
-  spotifyAccount  SpotifyAccount?
 
   @@index([clerkId])
 }
@@ -70,26 +68,4 @@ model Snippet {
   updatedAt DateTime @updatedAt
 
   @@index([userId, updatedAt])
-}
-
-// ─── SpotifyAccount ──────────────────────────────────────────
-// Encrypted OAuth tokens for the Spotify Web API. accessToken
-// and refreshToken are stored as AES-256-GCM ciphertext blobs
-// (handled by backend/src/lib/spotifyCrypto.js). The encryption
-// key comes from env TOKEN_ENCRYPTION_KEY (32-byte hex).
-//
-// Why encrypt: even if the DB dump leaks, tokens are useless
-// without the encryption key (held only in app process env).
-model SpotifyAccount {
-  id            String   @id @default(uuid())
-  userId        String   @unique
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken   String   @db.Text  // ciphertext (base64)
-  refreshToken  String   @db.Text  // ciphertext (base64)
-  expiresAt     DateTime
-  scope         String   @db.Text
-  spotifyUserId String?  // cached for quick lookups
-  product       String?  // "premium" | "free" | "open"
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
 }
