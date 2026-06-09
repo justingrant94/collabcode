@@ -23,7 +23,16 @@
   line-height: var(--leading-relaxed);
 }
 
+.tier-notice__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
 .tier-notice__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: var(--space-1) var(--space-3);
   font-size: var(--text-xs);
   background: transparent;
@@ -31,9 +40,20 @@
   border-radius: var(--radius-sm);
   color: var(--color-text-secondary);
   cursor: var(--cursor-pointer);
+  text-decoration: none;
   transition: background var(--duration-fast) var(--ease-out);
 }
 
 .tier-notice__action:hover {
   background: var(--color-surface-hover);
+}
+
+.tier-notice__action--primary {
+  background: var(--color-warning);
+  border-color: transparent;
+  color: var(--color-text-inverse);
+}
+
+.tier-notice__action--primary:hover {
+  background: color-mix(in srgb, var(--color-warning) 84%, #ffffff);
 }

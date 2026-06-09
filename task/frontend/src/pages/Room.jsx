@@ -8,8 +8,8 @@
  *   [ Editor                  ] (Phase 4 will add Toolbar + Output)
  */
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api, ApiError } from '../lib/api.js';
 import { Spinner } from '../components/Spinner.jsx';
 import { RoomShareBar } from '../components/RoomShareBar.jsx';
@@ -27,7 +27,10 @@ import './Room.css';
 
 export function Room() {
   const { roomId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [metaState, setMetaState] = useState({ status: 'loading', error: null });
+  const handledEntryStateRef = useRef(false);
 
   // Verify the room exists before opening a socket — avoids a
   // confusing "join-room → room_not_found" error popup.
@@ -66,6 +69,10 @@ export function Room() {
   const callApi = useApi();
   const { push } = useToast();
 
+  useEffect(() => {
+    handledEntryStateRef.current = false;
+  }, [roomId]);
+
   const clearOutput = () =>
     setRunState({
       running: false,
@@ -92,11 +99,46 @@ export function Room() {
     runState.ranCode !== null &&
     runState.ranCode !== code;
 
+  useEffect(() => {
+    if (status !== 'ready') return;
+    if (handledEntryStateRef.current) return;
+    if (!location.state?.justCreated && !location.state?.bootstrapSnippet) return;
+
+    handledEntryStateRef.current = true;
+
+    if (location.state?.bootstrapSnippet) {
+      const snippet = location.state.bootstrapSnippet;
+      if (snippet.language && snippet.language !== language) {
+        sendLanguage(snippet.language);
+      }
+      if (snippet.code) {
+        applyCode(snippet.code);
+      }
+      push(`Started a room from "${snippet.title}"`, { variant: 'success' });
+    } else if (location.state?.justCreated) {
+      push('Room live. Copy the invite link to bring in a second cursor.', {
+        variant: 'success',
+        duration: 4200,
+      });
+    }
+
+    navigate(location.pathname, { replace: true, state: null });
+  }, [
+    applyCode,
+    language,
+    location.pathname,
+    location.state,
+    navigate,
+    push,
+    sendLanguage,
+    status,
+  ]);
+
   const handleRun = async () => {
     // Client-side guard so the user gets an immediate, useful
     // hint instead of a backend 400 → opaque "missing_code" toast.
     if (!code || !code.trim()) {
-      push('Write some code first', { variant: 'error' });
+      push('Write some code first', { variant: 'danger' });
       return;
     }
     // Snapshot inputs at submit time so the result we eventually
@@ -186,7 +228,7 @@ export function Room() {
   return (
     <section className="room">
       <div className="room__topbar">
-        <RoomShareBar roomId={roomId} language={language} />
+        <RoomShareBar roomId={roomId} />
         <UserAvatars users={users} />
       </div>
 

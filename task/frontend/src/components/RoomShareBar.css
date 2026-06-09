@@ -7,16 +7,16 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
 }
 
 .share-bar__meta {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-4);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
@@ -29,35 +29,48 @@
   text-transform: uppercase;
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-wide);
+  flex-shrink: 0;
+}
+
+.share-bar__copy-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.share-bar__title,
+.share-bar__hint {
+  margin: 0;
+}
+
+.share-bar__title {
+  color: var(--color-text-primary);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+}
+
+.share-bar__hint {
+  color: var(--color-text-secondary);
 }
 
 .share-bar__id {
+  flex-shrink: 0;
   font-family: var(--font-mono);
   color: var(--color-text-primary);
   background: var(--color-surface-raised);
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-sm);
-  /* Long UUIDs shouldn't bust the bar */
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 240px;
-}
-
-.share-bar__dot {
-  color: var(--color-text-muted);
-}
-
-.share-bar__lang {
-  color: var(--color-text-secondary);
 }
 
 .share-bar__copy {
   flex-shrink: 0;
-  padding: var(--space-2) var(--space-4);
+  min-width: 180px;
+  padding: var(--space-3) var(--space-4);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
   background: var(--color-accent);
   color: var(--color-accent-contrast);
   border: 1px solid transparent;
@@ -86,10 +99,13 @@
     flex-direction: column;
     align-items: stretch;
   }
+
+  .share-bar__meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .share-bar__copy {
     width: 100%;
-  }
-  .share-bar__id {
-    max-width: none;
   }
 }

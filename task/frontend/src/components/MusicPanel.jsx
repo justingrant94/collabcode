@@ -19,9 +19,9 @@ import { Spinner } from './Spinner.jsx';
 import './MusicPanel.css';
 
 export function MusicPanel({ socket, roomId, mySocketId }) {
-  const { status, connected, product, disconnect, refresh } = useSpotify();
+  const [open, setOpen] = useState(false);
+  const { status, connected, product, disconnect, refresh } = useSpotify({ enabled: open });
   const dj = useDj({ socket, roomId, mySocketId });
-  const [open, setOpen] = useState(true);
 
   return (
     <section className="music-panel">
@@ -32,7 +32,10 @@ export function MusicPanel({ socket, roomId, mySocketId }) {
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
         >
-          <span className="music-panel__title">Music</span>
+          <span className="music-panel__title-wrap">
+            <span className="music-panel__title">DJ booth</span>
+            <span className="music-panel__subtitle">Optional room soundtrack</span>
+          </span>
           <span className="music-panel__chev" aria-hidden="true">{open ? '▾' : '▸'}</span>
         </button>
         {connected && (

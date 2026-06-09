@@ -15,7 +15,7 @@
  *   Phase 8 → SpotifyConnect / MusicPlayer mini display
  */
 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
 import { Logo } from './Logo.jsx';
 import { ThemeToggle } from './ThemeToggle.jsx';
@@ -28,10 +28,13 @@ import './Layout.css';
  * @param {{ children: import('react').ReactNode }} props
  */
 export function Layout({ children }) {
+  const location = useLocation();
+  const isRoomRoute = location.pathname.startsWith('/r/');
+
   return (
     <div className="layout">
       <header className="layout__header" role="banner">
-        <div className="layout__header-inner">
+        <div className={`layout__header-inner${isRoomRoute ? ' layout__header-inner--wide' : ''}`}>
           <Logo />
           <div className="layout__header-actions">
             <SignedOut>
@@ -39,7 +42,7 @@ export function Layout({ children }) {
             </SignedOut>
             <ThemeToggle />
             <SignedIn>
-              <AccentColorPicker />
+              {isRoomRoute && <AccentColorPicker />}
               <ProfileButton />
             </SignedIn>
           </div>
@@ -50,7 +53,7 @@ export function Layout({ children }) {
         {children}
       </main>
 
-      <Footer />
+      {!isRoomRoute && <Footer />}
     </div>
   );
 }

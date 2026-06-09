@@ -11,7 +11,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { useApi } from './useApi.js';
 import { createPkceChallenge, getRedirectUri } from '../lib/spotifyPkce.js';
 
-export function useSpotify() {
+export function useSpotify({ enabled = true } = {}) {
   const { isSignedIn } = useAuth();
   const callApi = useApi();
   const [state, setState] = useState({
@@ -22,6 +22,7 @@ export function useSpotify() {
   });
 
   const refresh = useCallback(async () => {
+    if (!enabled) return;
     if (!isSignedIn) {
       setState({ status: 'idle', connected: false, product: null, error: null });
       return;
@@ -38,9 +39,12 @@ export function useSpotify() {
     } catch (err) {
       setState({ status: 'error', connected: false, product: null, error: err.message });
     }
-  }, [isSignedIn, callApi]);
+  }, [enabled, isSignedIn, callApi]);
 
-  useEffect(() => { refresh(); }, [refresh]);
+  useEffect(() => {
+    if (!enabled) return;
+    refresh();
+  }, [enabled, refresh]);
 
   /** Kick off PKCE auth → redirect to Spotify. */
   const connect = useCallback(async () => {

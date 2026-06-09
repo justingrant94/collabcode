@@ -25,10 +25,18 @@ const limiter = rateLimit({
   message: { error: 'rate_limited', retryAfter: '1m' },
 });
 
+const previewLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'rate_limited', retryAfter: '1m' },
+});
+
 const ENABLED = process.env.ENABLE_EXECUTE !== 'false';
 const MAX_CODE_BYTES = 256 * 1024;
 
-executeRouter.post('/', requireAuth, limiter, async (req, res, next) => {
+async function executeRequest(req, res, next) {
   try {
     if (!ENABLED) {
       logger.warn('execute: server-side disabled (ENABLE_EXECUTE=false)');
@@ -57,4 +65,7 @@ executeRouter.post('/', requireAuth, limiter, async (req, res, next) => {
     logger.error({ err: err.message, code: err.code }, 'execute failed');
     next(err);
   }
-});
+}
+
+executeRouter.post('/preview', previewLimiter, executeRequest);
+executeRouter.post('/', requireAuth, limiter, executeRequest);

@@ -5,6 +5,8 @@
  *   POST   /api/spotify/callback   { code, codeVerifier, redirectUri }
  *                                  → exchanges code, stores encrypted tokens
  *   GET    /api/spotify/me         → connection status + cached profile
+ *   GET    /api/spotify/search?q=  → search tracks for the room soundtrack
+ *   PUT    /api/spotify/player     → transfer playback + start a track
  *   POST   /api/spotify/access     → returns a fresh access token (auto-refresh)
  *   DELETE /api/spotify/disconnect → deletes the SpotifyAccount row
  *
@@ -24,6 +26,8 @@ export const spotifyRouter = Router();
 
 const SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token';
 const SPOTIFY_ME_URL = 'https://api.spotify.com/v1/me';
+const SPOTIFY_SEARCH_URL = 'https://api.spotify.com/v1/search';
+const SPOTIFY_PLAYER_URL = 'https://api.spotify.com/v1/me/player';
 
 const SCOPES = [
   'user-read-email',
@@ -60,7 +64,15 @@ spotifyRouter.get('/login', (req, res) => {
 // ─── Exchange auth code → tokens ─────────────────────────
 spotifyRouter.post('/callback', async (req, res, next) => {
   try {
-    const { code, codeVerifier, redirectUri } = req.body || {};
+    const {
+      code,
+      codeVerifier: camelVerifier,
+      redirectUri: camelRedirect,
+      code_verifier: snakeVerifier,
+      redirect_uri: snakeRedirect,
+    } = req.body || {};
+    const codeVerifier = camelVerifier || snakeVerifier;
+    const redirectUri = camelRedirect || snakeRedirect;
     if (!code || !codeVerifier || !redirectUri) {
       return res.status(400).json({ error: 'missing_fields' });
     }
@@ -129,6 +141,118 @@ spotifyRouter.get('/me', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// ─── Search tracks for the room DJ ───────────────────────
+spotifyRouter.get('/search', async (req, res, next) => {
+  try {
+    const query = String(req.query.q || '').trim();
+    if (!query) return res.json({ tracks: [] });
+
+    const acc = await prisma.spotifyAccount.findUnique({
+      where: { userId: req.user.id },
+    });
+    if (!acc) return res.status(404).json({ error: 'not_connected' });
+
+    const fresh = await getValidAccessToken(acc);
+    if (!fresh) return res.status(401).json({ error: 'refresh_failed' });
+
+    const searchRes = await fetch(
+      `${SPOTIFY_SEARCH_URL}?${new URLSearchParams({
+        q: query,
+        type: 'track',
+        limit: '6',
+      }).toString()}`,
+      {
+        headers: { Authorization: `Bearer ${fresh.accessToken}` },
+      },
+    );
+
+    if (!searchRes.ok) {
+      const err = await searchRes.text();
+      logger.warn({ err }, 'spotify search failed');
+      return res.status(400).json({ error: 'spotify_search_failed' });
+    }
+
+    const data = await searchRes.json();
+    const tracks = (data.tracks?.items || []).map((track) => ({
+      id: track.id,
+      uri: track.uri,
+      name: track.name,
+      artist: track.artists?.map((artist) => artist.name).join(', ') || 'Unknown artist',
+      album: track.album?.name || null,
+      artwork: track.album?.images?.[0]?.url || null,
+    }));
+
+    res.json({ tracks });
+  } catch (err) { next(err); }
+});
+
+// ─── Transfer playback / start a specific track ──────────
+spotifyRouter.put('/player', async (req, res, next) => {
+  try {
+    const { deviceId, trackUri, positionMs = 0, paused = false } = req.body || {};
+    if (!deviceId || typeof deviceId !== 'string') {
+      return res.status(400).json({ error: 'missing_device_id' });
+    }
+
+    const acc = await prisma.spotifyAccount.findUnique({
+      where: { userId: req.user.id },
+    });
+    if (!acc) return res.status(404).json({ error: 'not_connected' });
+
+    const fresh = await getValidAccessToken(acc);
+    if (!fresh) return res.status(401).json({ error: 'refresh_failed' });
+
+    const authHeaders = {
+      Authorization: `Bearer ${fresh.accessToken}`,
+      'Content-Type': 'application/json',
+    };
+
+    const transferRes = await fetch(SPOTIFY_PLAYER_URL, {
+      method: 'PUT',
+      headers: authHeaders,
+      body: JSON.stringify({ device_ids: [deviceId], play: false }),
+    });
+
+    if (!transferRes.ok && transferRes.status !== 204) {
+      const err = await transferRes.text();
+      logger.warn({ err }, 'spotify transfer failed');
+      return res.status(400).json({ error: 'spotify_transfer_failed' });
+    }
+
+    if (trackUri) {
+      const playRes = await fetch(
+        `${SPOTIFY_PLAYER_URL}/play?${new URLSearchParams({ device_id: deviceId }).toString()}`,
+        {
+          method: 'PUT',
+          headers: authHeaders,
+          body: JSON.stringify({
+            uris: [trackUri],
+            position_ms: Math.max(0, Number(positionMs) || 0),
+          }),
+        },
+      );
+
+      if (!playRes.ok && playRes.status !== 204) {
+        const err = await playRes.text();
+        logger.warn({ err }, 'spotify play failed');
+        return res.status(400).json({ error: 'spotify_play_failed' });
+      }
+
+      if (paused) {
+        await fetch(
+          `${SPOTIFY_PLAYER_URL}/pause?${new URLSearchParams({ device_id: deviceId }).toString()}`,
+          {
+            method: 'PUT',
+            headers: authHeaders,
+          },
+        ).catch(() => {});
+      }
+    }
+
+    res.status(204).end();
+  } catch (err) { next(err); }
+});
+
 // ─── Get a fresh access token (auto-refresh if expired) ──
 spotifyRouter.post('/access', async (req, res, next) => {
   try {
@@ -137,28 +261,9 @@ spotifyRouter.post('/access', async (req, res, next) => {
     });
     if (!acc) return res.status(404).json({ error: 'not_connected' });
 
-    // Refresh if < 60s left on the clock.
-    if (acc.expiresAt.getTime() - Date.now() < 60_000) {
-      const refreshed = await refreshAccessToken(decryptToken(acc.refreshToken));
-      if (!refreshed) return res.status(401).json({ error: 'refresh_failed' });
-      await prisma.spotifyAccount.update({
-        where: { userId: req.user.id },
-        data: {
-          accessToken: encryptToken(refreshed.access_token),
-          // Spotify sometimes returns a new refresh token, sometimes not.
-          ...(refreshed.refresh_token && {
-            refreshToken: encryptToken(refreshed.refresh_token),
-          }),
-          expiresAt: new Date(Date.now() + refreshed.expires_in * 1000),
-        },
-      });
-      return res.json({ accessToken: refreshed.access_token, expiresIn: refreshed.expires_in });
-    }
-
-    res.json({
-      accessToken: decryptToken(acc.accessToken),
-      expiresIn: Math.floor((acc.expiresAt.getTime() - Date.now()) / 1000),
-    });
+    const fresh = await getValidAccessToken(acc);
+    if (!fresh) return res.status(401).json({ error: 'refresh_failed' });
+    res.json(fresh);
   } catch (err) { next(err); }
 });
 
@@ -181,6 +286,31 @@ async function fetchSpotifyProfile(accessToken) {
   } catch {
     return null;
   }
+}
+
+async function getValidAccessToken(acc) {
+  if (acc.expiresAt.getTime() - Date.now() >= 60_000) {
+    return {
+      accessToken: decryptToken(acc.accessToken),
+      expiresIn: Math.floor((acc.expiresAt.getTime() - Date.now()) / 1000),
+    };
+  }
+
+  const refreshed = await refreshAccessToken(decryptToken(acc.refreshToken));
+  if (!refreshed) return null;
+
+  await prisma.spotifyAccount.update({
+    where: { userId: acc.userId },
+    data: {
+      accessToken: encryptToken(refreshed.access_token),
+      ...(refreshed.refresh_token && {
+        refreshToken: encryptToken(refreshed.refresh_token),
+      }),
+      expiresAt: new Date(Date.now() + refreshed.expires_in * 1000),
+    },
+  });
+
+  return { accessToken: refreshed.access_token, expiresIn: refreshed.expires_in };
 }
 
 async function refreshAccessToken(refreshToken) {

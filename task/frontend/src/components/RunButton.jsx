@@ -20,6 +20,7 @@ export function RunButton({ onClick, running = false, disabled = false }) {
       type="button"
       className="run-btn"
       onClick={onClick}
+      title="Run code (Cmd/Ctrl + Enter)"
       disabled={running || disabled}
       data-running={running ? 'true' : undefined}
     >
@@ -34,6 +35,7 @@ export function RunButton({ onClick, running = false, disabled = false }) {
             <path d="M4 2.5v11a.5.5 0 0 0 .77.42l8.5-5.5a.5.5 0 0 0 0-.84l-8.5-5.5A.5.5 0 0 0 4 2.5z" />
           </svg>
           <span>Run</span>
+          <span className="run-btn__shortcut">⌘↵</span>
         </>
       )}
     </button>

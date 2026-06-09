@@ -7,25 +7,22 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: var(--space-6);
+  padding: var(--space-4) var(--space-6) var(--space-6);
   gap: var(--space-4);
-  min-height: calc(100dvh - var(--header-height) - var(--footer-height));
+  min-height: calc(100dvh - var(--header-height));
 }
 
 .room__topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
   gap: var(--space-4);
-  flex-wrap: wrap;
 }
 
 /* ─── Two-column layout: editor + snippets ─────────────── */
 .room__work {
   display: grid;
-  grid-template-columns: 1fr 280px;
+  grid-template-columns: minmax(0, 1fr) 320px;
   gap: var(--space-4);
   flex: 1 1 auto;
   /* Critical: lets the grid track shrink so children with
@@ -53,15 +50,15 @@
   min-width: 0;
   min-height: 0;
   height: 100%;
-  overflow-y: auto;
 }
 
 @media (max-width: 1024px) {
-  .room__work {
+  .room__topbar {
     grid-template-columns: 1fr;
   }
-  .room__side-col {
-    order: -1; /* surface snippets above editor on narrow screens */
+
+  .room__work {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -102,6 +99,7 @@
 
 @media (max-width: 640px) {
   .room {
-    padding: var(--space-4);
+    padding: var(--space-3);
+    gap: var(--space-3);
   }
 }

@@ -11,17 +11,25 @@ import './TierNotice.css';
 export function TierNotice({ onDisconnect }) {
   return (
     <div className="tier-notice" role="status">
-      <h3 className="tier-notice__title">Spotify Premium required</h3>
+      <h3 className="tier-notice__title">Spotify connected. Premium is required for browser playback.</h3>
       <p className="tier-notice__body">
-        Synced playback uses the Spotify Web Playback SDK, which only works
-        for Premium accounts. You can still see what the DJ is playing — you
-        just can't listen in here without Premium.
+        Your account linked successfully. Spotify only unlocks the Web Playback SDK for Premium accounts, so the room soundtrack will stay unavailable in-browser until the account upgrades.
       </p>
-      {onDisconnect && (
-        <button type="button" className="tier-notice__action" onClick={onDisconnect}>
-          Disconnect Spotify
-        </button>
-      )}
+      <div className="tier-notice__actions">
+        <a
+          href="https://www.spotify.com/premium/"
+          className="tier-notice__action tier-notice__action--primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View Premium plans
+        </a>
+        {onDisconnect && (
+          <button type="button" className="tier-notice__action" onClick={onDisconnect}>
+            Disconnect Spotify
+          </button>
+        )}
+      </div>
     </div>
   );
 }

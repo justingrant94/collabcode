@@ -37,3 +37,12 @@
   opacity: 0.7;
   cursor: progress;
 }
+
+.run-btn__shortcut {
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-accent-contrast) 18%, transparent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+}

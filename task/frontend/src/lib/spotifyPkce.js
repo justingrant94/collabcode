@@ -12,6 +12,7 @@
  */
 
 const VERIFIER_KEY = 'collab.spotify.pkce.verifier';
+const RETURN_TO_KEY = 'collab.spotify.return-to';
 
 function randomVerifier(length = 64) {
   const arr = new Uint8Array(length);
@@ -47,6 +48,18 @@ export function readStoredVerifier() {
 
 export function clearStoredVerifier() {
   sessionStorage.removeItem(VERIFIER_KEY);
+}
+
+export function storeSpotifyReturnTo(path) {
+  sessionStorage.setItem(RETURN_TO_KEY, path || '/');
+}
+
+export function readSpotifyReturnTo() {
+  return sessionStorage.getItem(RETURN_TO_KEY) || '/';
+}
+
+export function clearSpotifyReturnTo() {
+  sessionStorage.removeItem(RETURN_TO_KEY);
 }
 
 export function getRedirectUri() {

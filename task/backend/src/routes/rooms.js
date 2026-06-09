@@ -51,6 +51,35 @@ roomsRouter.post('/', requireAuth, loadUser, async (req, res, next) => {
   }
 });
 
+// ─── List current user's recent rooms ─────────────────────
+roomsRouter.get('/', requireAuth, loadUser, async (req, res, next) => {
+  try {
+    const requested = Number.parseInt(String(req.query.limit || '6'), 10);
+    const take = Number.isFinite(requested)
+      ? Math.min(Math.max(requested, 1), 12)
+      : 6;
+
+    const rooms = await prisma.room.findMany({
+      where: { ownerId: req.user.id },
+      orderBy: [
+        { lastActiveAt: 'desc' },
+        { createdAt: 'desc' },
+      ],
+      take,
+      select: {
+        id: true,
+        language: true,
+        createdAt: true,
+        lastActiveAt: true,
+      },
+    });
+
+    res.json({ rooms });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ─── Get room metadata ────────────────────────────────────
 // Public read — anyone with the link can preview metadata.
 // Joining the live session still requires socket auth.

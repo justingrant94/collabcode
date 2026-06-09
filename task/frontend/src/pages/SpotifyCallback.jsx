@@ -14,7 +14,13 @@ import { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApi } from '../hooks/useApi.js';
 import { useToast } from '../components/ToastProvider.jsx';
-import { readStoredVerifier, clearStoredVerifier, getRedirectUri } from '../lib/spotifyPkce.js';
+import {
+  readStoredVerifier,
+  clearStoredVerifier,
+  getRedirectUri,
+  readSpotifyReturnTo,
+  clearSpotifyReturnTo,
+} from '../lib/spotifyPkce.js';
 import { Spinner } from '../components/Spinner.jsx';
 import './SpotifyCallback.css';
 
@@ -22,7 +28,7 @@ export function SpotifyCallback() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const callApi = useApi();
-  const toast = useToast();
+  const { push } = useToast();
   // Strict-mode protection: only exchange once per mount.
   const handled = useRef(false);
 
@@ -34,6 +40,7 @@ export function SpotifyCallback() {
     const err = params.get('error');
     const verifier = readStoredVerifier();
     const redirectUri = getRedirectUri();
+    const returnTo = readSpotifyReturnTo();
 
     (async () => {
       try {
@@ -42,17 +49,18 @@ export function SpotifyCallback() {
         if (!verifier) throw new Error('missing_verifier');
         await callApi('/api/spotify/callback', {
           method: 'POST',
-          body: { code, code_verifier: verifier, redirect_uri: redirectUri },
+          body: { code, codeVerifier: verifier, redirectUri },
         });
-        toast.success('Spotify connected');
+        push('Spotify connected', { variant: 'success' });
       } catch (e) {
-        toast.error(`Spotify connection failed (${e.message})`);
+        push(`Spotify connection failed (${e.message})`, { variant: 'danger', duration: 5000 });
       } finally {
         clearStoredVerifier();
-        navigate('/', { replace: true });
+        clearSpotifyReturnTo();
+        navigate(returnTo, { replace: true });
       }
     })();
-  }, [params, callApi, navigate, toast]);
+  }, [params, callApi, navigate, push]);
 
   return (
     <main className="spotify-callback">
