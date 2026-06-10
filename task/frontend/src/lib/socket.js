@@ -15,7 +15,13 @@ import { io } from 'socket.io-client';
 
 let socket = null;
 
-const URL = import.meta.env.VITE_API_URL || ''; // empty → same origin via Vite proxy
+const RAW_URL = import.meta.env.VITE_API_URL || '';
+const IS_PROD = import.meta.env.PROD;
+const URL = RAW_URL.trim();
+
+if (IS_PROD && !URL) {
+  throw new Error('Missing VITE_API_URL in production');
+}
 
 export function getSocket(getToken) {
   if (socket && socket.connected) return socket;

@@ -11,7 +11,13 @@
  * Uses VITE_API_URL (empty in dev → uses Vite proxy).
  */
 
-const BASE = import.meta.env.VITE_API_URL || '';
+const RAW_BASE = import.meta.env.VITE_API_URL || '';
+const IS_PROD = import.meta.env.PROD;
+const BASE = RAW_BASE.trim();
+
+if (IS_PROD && !BASE) {
+  throw new Error('Missing VITE_API_URL in production');
+}
 
 export class ApiError extends Error {
   constructor(message, status, code, body) {

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm install --prefix frontend",
+  "buildCommand": "npm run build:frontend",
+  "outputDirectory": "frontend/dist",
+  "rewrites": [
+    {
+      "source": "/((?!api/|socket.io/|assets/|icons/|favicon\\.svg|vite\\.svg).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
