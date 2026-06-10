@@ -25,6 +25,8 @@ export function Toolbar({
   running,
   onClear,
   canClear,
+  runDisabled = false,
+  runTitle,
 }) {
   return (
     <div className="toolbar">
@@ -44,7 +46,12 @@ export function Toolbar({
             Clear
           </button>
         )}
-        <RunButton onClick={onRun} running={running} />
+        <RunButton
+          onClick={onRun}
+          running={running}
+          disabled={runDisabled}
+          title={runTitle}
+        />
       </div>
     </div>
   );

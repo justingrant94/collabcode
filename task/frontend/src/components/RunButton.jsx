@@ -12,15 +12,20 @@ import { Spinner } from './Spinner.jsx';
 import './RunButton.css';
 
 /**
- * @param {{ onClick: () => void, running?: boolean, disabled?: boolean }} props
+ * @param {{ onClick: () => void, running?: boolean, disabled?: boolean, title?: string }} props
  */
-export function RunButton({ onClick, running = false, disabled = false }) {
+export function RunButton({
+  onClick,
+  running = false,
+  disabled = false,
+  title = 'Run code (Cmd/Ctrl + Enter)',
+}) {
   return (
     <button
       type="button"
       className="run-btn"
       onClick={onClick}
-      title="Run code (Cmd/Ctrl + Enter)"
+      title={title}
       disabled={running || disabled}
       data-running={running ? 'true' : undefined}
     >

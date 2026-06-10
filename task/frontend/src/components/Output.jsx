@@ -11,12 +11,13 @@
  *   error     string | null   — transport-level error, not stderr
  *   stale     boolean         — result no longer matches the editor buffer
  *   hasCode   boolean         — editor currently has non-empty code
+ *   disabledMessage string | null — shown when execution is intentionally unavailable
  */
 
 import { Spinner } from './Spinner.jsx';
 import './Output.css';
 
-export function Output({ result, running, error, stale, hasCode }) {
+export function Output({ result, running, error, stale, hasCode, disabledMessage = null }) {
   if (running) {
     return (
       <section className="output output--running" aria-live="polite">
@@ -38,7 +39,9 @@ export function Output({ result, running, error, stale, hasCode }) {
     return (
       <section className="output output--idle">
         <p className="output__hint">
-          {hasCode
+          {disabledMessage
+            ? disabledMessage
+            : hasCode
             ? 'Nothing to display yet — hit Run to execute your code.'
             : 'Nothing to display yet — write some code, then hit Run.'}
         </p>

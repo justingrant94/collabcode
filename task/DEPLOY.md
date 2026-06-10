@@ -59,6 +59,7 @@ curl https://<your-backend-url>/health
 4. Set Vercel environment variables:
    - `VITE_API_URL=https://<your-backend-url>`
    - `VITE_CLERK_PUBLISHABLE_KEY=<your Clerk publishable key>`
+   - Optional: `VITE_ENABLE_EXECUTE=true` only when your backend host supports the Docker-based runner
 5. Deploy and copy the final Vercel URL.
 
 ## 5. Final Wiring
@@ -81,7 +82,7 @@ https://<your-backend-url>/webhooks/clerk
 3. Sign in and confirm authenticated data loads (`/api/me` path succeeds).
 4. Open the same room in two tabs and verify realtime updates.
 5. Confirm execute behavior:
-   - With `ENABLE_EXECUTE=false`, run endpoint returns `execute_disabled` by design.
+   - With `ENABLE_EXECUTE=false`, the hosted frontend disables Run by default and explains that sandbox execution is local-demo only.
 
 ## 7. Common Issues
 

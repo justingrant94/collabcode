@@ -23,6 +23,10 @@ import { Output } from '../components/Output.jsx';
 import { RunButton } from '../components/RunButton.jsx';
 import { LanguageDropdown } from '../components/LanguageDropdown.jsx';
 import { Spinner } from '../components/Spinner.jsx';
+import {
+  EXECUTION_DISABLED_MESSAGE,
+  EXECUTION_ENABLED,
+} from '../lib/execution.js';
 import './Landing.css';
 
 const LANGUAGE_STORAGE_KEY = 'collab.preferred-language';
@@ -149,6 +153,17 @@ function SignedOutLanding() {
   };
 
   const handleRun = useCallback(async () => {
+    if (!EXECUTION_ENABLED) {
+      setRunState({
+        running: false,
+        result: null,
+        error: EXECUTION_DISABLED_MESSAGE,
+        ranCode: null,
+        ranLanguage: null,
+      });
+      return;
+    }
+
     if (!code.trim()) {
       setRunState({
         running: false,
@@ -193,7 +208,7 @@ function SignedOutLanding() {
     }
   }, [code, language]);
 
-  useRunShortcut(handleRun);
+  useRunShortcut(handleRun, EXECUTION_ENABLED);
 
   const stale =
     !!runState.result &&
@@ -238,14 +253,25 @@ function SignedOutLanding() {
         <div className="landing__playground-header">
           <div>
             <p className="landing__playground-kicker">Try the sandbox now</p>
-            <h2 className="landing__playground-title">No signup required for this preview.</h2>
+            <h2 className="landing__playground-title">
+              {EXECUTION_ENABLED
+                ? 'No signup required for this preview.'
+                : 'Live editor preview for the hosted portfolio.'}
+            </h2>
           </div>
           <span className="landing__playground-badge">Cmd/Ctrl + Enter</span>
         </div>
 
         <div className="landing__playground-toolbar">
           <LanguageDropdown value={language} onChange={handleLanguageChange} />
-          <RunButton onClick={handleRun} running={runState.running} />
+          <RunButton
+            onClick={handleRun}
+            running={runState.running}
+            disabled={!EXECUTION_ENABLED}
+            title={EXECUTION_ENABLED
+              ? 'Run code (Cmd/Ctrl + Enter)'
+              : EXECUTION_DISABLED_MESSAGE}
+          />
         </div>
 
         <div className="landing__playground-editor">
@@ -264,10 +290,13 @@ function SignedOutLanding() {
           error={runState.error}
           stale={stale}
           hasCode={!!code.trim()}
+          disabledMessage={!EXECUTION_ENABLED ? EXECUTION_DISABLED_MESSAGE : null}
         />
 
         <p className="landing__playground-note">
-          This preview runs in the same sandbox as the room experience. Create an account when you want to save snippets or invite someone else in.
+          {EXECUTION_ENABLED
+            ? 'This preview runs in the same sandbox as the room experience. Create an account when you want to save snippets or invite someone else in.'
+            : 'The hosted portfolio keeps execution off for reliability. Use the shared editor, rooms, and snippets here, then run the sandbox locally when you want the full demo.'}
         </p>
       </aside>
     </div>

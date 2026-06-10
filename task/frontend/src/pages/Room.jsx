@@ -22,6 +22,10 @@ import { SnippetsSidebar } from '../components/SnippetsSidebar.jsx';
 import { useRoomSocket } from '../hooks/useRoomSocket.js';
 import { useApi } from '../hooks/useApi.js';
 import { useToast } from '../components/ToastProvider.jsx';
+import {
+  EXECUTION_DISABLED_MESSAGE,
+  EXECUTION_ENABLED,
+} from '../lib/execution.js';
 import './Room.css';
 
 export function Room() {
@@ -134,6 +138,18 @@ export function Room() {
   ]);
 
   const handleRun = async () => {
+    if (!EXECUTION_ENABLED) {
+      setRunState({
+        running: false,
+        result: null,
+        error: EXECUTION_DISABLED_MESSAGE,
+        ranCode: null,
+        ranLanguage: null,
+      });
+      push(EXECUTION_DISABLED_MESSAGE, { variant: 'danger' });
+      return;
+    }
+
     // Client-side guard so the user gets an immediate, useful
     // hint instead of a backend 400 → opaque "missing_code" toast.
     if (!code || !code.trim()) {
@@ -238,6 +254,10 @@ export function Room() {
         running={runState.running}
         onClear={clearOutput}
         canClear={!!runState.result || !!runState.error}
+        runDisabled={!EXECUTION_ENABLED}
+        runTitle={EXECUTION_ENABLED
+          ? 'Run code (Cmd/Ctrl + Enter)'
+          : EXECUTION_DISABLED_MESSAGE}
       />
 
       <div className="room__work">
@@ -261,6 +281,7 @@ export function Room() {
             error={runState.error}
             stale={stale}
             hasCode={!!code && !!code.trim()}
+            disabledMessage={!EXECUTION_ENABLED ? EXECUTION_DISABLED_MESSAGE : null}
           />
         </div>
 
