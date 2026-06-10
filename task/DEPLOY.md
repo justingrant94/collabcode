@@ -24,11 +24,14 @@ npm --prefix frontend run build
 
 ## 3. Deploy Backend on Render
 
-Preferred: use Blueprint so Render reads `render.yaml` from repo root.
+This repository stores the app inside the `task/` subdirectory, so Render and Vercel must be pointed at that path explicitly.
+
+Preferred: use Blueprint and set the Blueprint path to `task/render.yaml`.
 
 1. In Render, create a new Blueprint from this repo.
 2. Confirm the service settings:
-   - `rootDir`: `backend`
+   - `Blueprint path`: `task/render.yaml`
+   - `rootDir`: `task/backend`
    - `buildCommand`: `npm install && npm run db:generate && npm run db:migrate:deploy`
    - `startCommand`: `npm start`
    - `healthCheckPath`: `/health`
@@ -51,11 +54,12 @@ curl https://<your-backend-url>/health
 ## 4. Deploy Frontend on Vercel
 
 1. Import the same repository in Vercel.
-2. Deploy from repo root (the root `vercel.json` already defines install/build/output).
-3. Set Vercel environment variables:
+2. Set the Vercel project Root Directory to `task`.
+3. Confirm the `task/vercel.json` file is being used for install/build/output.
+4. Set Vercel environment variables:
    - `VITE_API_URL=https://<your-backend-url>`
    - `VITE_CLERK_PUBLISHABLE_KEY=<your Clerk publishable key>`
-4. Deploy and copy the final Vercel URL.
+5. Deploy and copy the final Vercel URL.
 
 ## 5. Final Wiring
 
@@ -82,7 +86,7 @@ https://<your-backend-url>/webhooks/clerk
 ## 7. Common Issues
 
 1. Vercel 404 on deep links:
-   - Verify deployment is from repo root with `vercel.json` present.
+   - Verify the Vercel project Root Directory is `task` so `task/vercel.json` is used.
 2. API requests 404 on Vercel domain:
    - `VITE_API_URL` is missing or incorrect.
 3. CORS or socket handshake errors:
