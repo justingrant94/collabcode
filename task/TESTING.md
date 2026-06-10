@@ -182,7 +182,7 @@ For each page/component, verify in BOTH modes:
 | 12.5 | Helmet headers present on responses | ⬜ | |
 | 12.6 | TOKEN_ENCRYPTION_KEY not the default zeros | ✅ | Set to 64-char hex |
 | 12.7 | `.env` files are gitignored | ✅ | `.gitignore` checked |
-| 12.8 | DEV_BYPASS_AUTH=false in committed `.env.example` | ⚠️ | Currently `true` in active `.env` for testing |
+| 12.8 | DEV_BYPASS_AUTH=false in committed `.env.example` | ✅ | `backend/.env.example` defaults to `false` |
 
 ---
 
@@ -212,7 +212,7 @@ curl -X POST http://127.0.0.1:4000/api/execute \
 
 ## Outstanding
 
-- ❌ Phase 5 deploy config (Fly.io fly.toml, Dockerfile verified, README)
+- ✅ Deployment config scaffolding (Vercel + Render + deploy runbook)
 - ❌ TypeScript sandbox image (currently fakes TS as JS)
 - ❌ Clerk webhook signing for production user-sync
 - ❌ Automated UI snapshot tests (Playwright)

@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: collab-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install && npm run db:generate && npm run db:migrate:deploy
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ENABLE_EXECUTE
+        value: "false"
+      - key: LOG_LEVEL
+        value: info
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: CLERK_WEBHOOK_SECRET
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
